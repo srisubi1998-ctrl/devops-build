@@ -6,6 +6,16 @@ pipeline {
                 git branch: 'dev', url: 'https://github.com/srisubi1998-ctrl/devops-build.git'
             }
         }
+        stage('Build React App') {
+            steps {
+                sh '''
+                    if [ -f package.json ]; then
+                        npm install
+                        npm run build
+                    fi
+                '''
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t subitcha1998/dev:latest .'
@@ -22,7 +32,7 @@ pipeline {
         }
         stage('Deploy to EC2') {
             steps {
-                sh './deploy.sh'
+                sh 'chmod +x deploy.sh && ./deploy.sh'
             }
         }
     }
